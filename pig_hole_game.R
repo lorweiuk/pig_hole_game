@@ -82,21 +82,50 @@ pig_hole_game <- function(n_max_rounds, n_marbles_each, player_begin, strategy_p
 # simulate #
 ############
 
-n_max_rounds <- 300
+player_succ <- matrix(NaN, nrow = 5, ncol = 5)
+num_rounds  <- matrix(NaN, nrow = 5, ncol = 5)
 
-n_marbles_each <- 30
-
-player_begin <- TRUE
-
-strategy_2fields <- function(board, player_marbles, enemy_marbles) {
-  # function defining player's strategy
-  if (sum(board[1:5] == c(1, 2, 3, 4, 5)) >= 2) {
-    return(1)
-  } else {
-    return(0)
+for (plf in 1:5) {
+  
+  strategy_player <- function(board, player_marbles, enemy_marbles) {
+    # function defining player's strategy
+    if (sum(board[1:5] == c(1, 2, 3, 4, 5)) >= plf) {
+      return(1)
+    } else {
+      return(0)
+    }
+  }
+  
+  for (enf in 1:5) {
+    
+    strategy_enemy <- function(board, player_marbles, enemy_marbles) {
+      # function defining player's strategy
+      if (sum(board[1:5] == c(1, 2, 3, 4, 5)) >= enf) {
+        return(1)
+      } else {
+        return(0)
+      }
+    }
+    
+    num_succ <- rep(0, times = 300)
+    n_rounds <- rep(0, times = 300)
+    
+    for (i in 1:300) {
+      temp <- pig_hole_game(300, 30, TRUE, strategy_player, strategy_enemy)
+    
+      last_nonan <- max(which(!is.na(temp[, 9])))
+      
+      if (temp[last_nonan, 9] < temp[last_nonan, 10])
+        num_succ[i] = 1
+      
+      n_rounds[i] = n_rounds[i] + last_nonan
+    }
+    
+    player_succ[plf, enf] = mean(num_succ)
+    
+    num_rounds[plf, enf] = mean(n_rounds)
   }
 }
-
 
 
 
