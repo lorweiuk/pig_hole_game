@@ -1,5 +1,5 @@
 
-pig_hole_game <- function(n_max_rounds, n_marbles_each, player_begin, include_warmup, strategy_player, strategy_enemy) {
+pig_hole_game <- function(n_max_rounds, n_marbles_player, n_marbles_opponent, player_begin, include_warmup, strategy_player, strategy_opponent) {
     
   # dice throws for all rounds
   rnd_dice <- round(runif(n = n_max_rounds, min = 0.5000001, max = 6.4999999))
@@ -9,7 +9,7 @@ pig_hole_game <- function(n_max_rounds, n_marbles_each, player_begin, include_wa
   
   # marble count for player (col 1) and opponent (col 2)
   n_marbles <- matrix(NaN, nrow = n_max_rounds, ncol = 2)
-  n_marbles[1, ] = n_marbles_each
+  n_marbles[1, ] = c(n_marbles_player, n_marbles_opponent)
   
   # record of who's turn it is
   players_turn <- rep(NaN, times = n_max_rounds)
@@ -58,7 +58,7 @@ pig_hole_game <- function(n_max_rounds, n_marbles_each, player_begin, include_wa
         decision <- strategy_player(board_state[nr, ], n_marbles[nr, 1], n_marbles[nr, 2])
         
       } else if (players_round == 2) {
-        decision <- strategy_enemy(board_state[nr, ], n_marbles[nr, 2], n_marbles[nr, 1])
+        decision <- strategy_opponent(board_state[nr, ], n_marbles[nr, 2], n_marbles[nr, 1])
       }
       
       if (decision)
